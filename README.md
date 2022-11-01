@@ -17,6 +17,7 @@ This project is my first project plan, intension is to get a job. The aim can be
 - Design for the class Board
     - Contains information of the whole board. Should contain a key API for the future GUI extension. 
     - Able to move pieces, simulate the game. Should contain a key API for the future GUI extension. 
+    - Move Class represent a move.
 - Design for the class Piece
     - Pawn
     - Knight
