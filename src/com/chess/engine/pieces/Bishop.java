@@ -9,7 +9,7 @@ import com.chess.engine.board.BoardUltis;
 import com.chess.engine.board.Move;
 
 public class Bishop extends Piece {
-    Bishop(int pieceRow, int pieceCol, AllianceType allianceType) {
+    public Bishop(int pieceRow, int pieceCol, AllianceType allianceType) {
         super(PieceType.BISHOP, pieceRow, pieceCol, true, allianceType);
     }
 

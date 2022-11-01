@@ -11,4 +11,14 @@ public class Move {
         this.moveRow = piecePosition[0];
         this.moveCol = piecePosition[1];
     }
+
+    public int getMoveCol() {
+        return moveCol;
+    }
+    public int getMoveRow() {
+        return moveRow;
+    }
+    public Piece getMovePiece() {
+        return movePiece;
+    }
 }

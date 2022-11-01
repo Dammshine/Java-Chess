@@ -9,7 +9,7 @@ import com.chess.engine.board.BoardUltis;
 import com.chess.engine.board.Move;
 
 public class Queen extends Piece {
-    Queen(int pieceRow, int pieceCol, AllianceType allianceType) {
+    public Queen(int pieceRow, int pieceCol, AllianceType allianceType) {
         super(PieceType.QUEEN, pieceRow, pieceCol, true, allianceType);
     }
     

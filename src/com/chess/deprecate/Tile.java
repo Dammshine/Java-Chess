@@ -1,4 +1,4 @@
-package com.chess.engine.board;
+package com.chess.deprecate;
 
 import java.util.HashMap;
 import java.util.Map;

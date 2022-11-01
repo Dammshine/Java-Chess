@@ -10,7 +10,7 @@ import com.chess.engine.board.Move;
 
 public class Pawn extends Piece {
     final int allianceFactor;
-    Pawn(int pieceRow, int pieceCol, AllianceType allianceType) {
+    public Pawn(int pieceRow, int pieceCol, AllianceType allianceType) {
         super(PieceType.PAWN, pieceRow, pieceCol, true, allianceType);
         if (allianceType == AllianceType.WHITE) allianceFactor = 1;
         else allianceFactor = -1;

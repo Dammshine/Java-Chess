@@ -74,6 +74,19 @@ public abstract class Piece {
         return null;
     }
     
+    @Override
+    public String toString() {
+        String ret = "";
+        if (this.allianceType == AllianceType.WHITE) {
+            ret += "W";
+        } else {
+            ret += "B";
+        }
+        
+        ret += this.pieceType.toString();
+        return ret;
+    }
+
     /**
      * A common interface for all pieces, passes own possible moves according to type,
      * Exclude pawn since it got some unique mechanism (attack and move differs, also can promote, etc)

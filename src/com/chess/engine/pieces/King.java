@@ -8,7 +8,7 @@ import com.chess.engine.board.Board;
 import com.chess.engine.board.Move;
 
 public class King extends Piece {
-    King(int pieceRow, int pieceCol, AllianceType allianceType) {
+    public King(int pieceRow, int pieceCol, AllianceType allianceType) {
         super(PieceType.KING, pieceRow, pieceCol, true, allianceType);
     }
 
