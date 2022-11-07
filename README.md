@@ -26,3 +26,15 @@ This project is my first project plan, intension is to get a job. The aim can be
     - King
     - Queen
 
+Pharase 1 completed.
+
+### 2. Pharase 1.1
+- Add several chess feature
+    - Castle on king side, queen side
+    - En passant
+    - Pawn promote
+    - Illegel move if will get check mated
+    - Stale mate
+    - Wining condition
+- Add testing for the chess board
+- Add an output format, for moves and board
