@@ -2,7 +2,10 @@ package com.chess.engine.board;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.chess.deprecate.Tile;
 import com.chess.engine.pieces.Bishop;
@@ -13,6 +16,7 @@ import com.chess.engine.pieces.Piece;
 import com.chess.engine.pieces.Queen;
 import com.chess.engine.pieces.Rock;
 import com.chess.engine.pieces.Piece.AllianceType;
+import com.chess.engine.pieces.Piece.PieceType;
 
 public class Board {
     private Collection<Piece> whitePieces;
@@ -68,6 +72,9 @@ public class Board {
         this.board[7][5] = new Bishop(7, 5, AllianceType.WHITE);
         this.board[7][6] = new Knight(7, 6, AllianceType.WHITE);
         this.board[7][7] = new Rock(7, 7,   AllianceType.WHITE);
+
+        // Initialize first move
+        nextMove = AllianceType.WHITE;
     }
 
     /**
@@ -76,6 +83,10 @@ public class Board {
      * @return
      */
     public void simulate(Move move) {
+        // Swap turns
+        if (nextMove == AllianceType.WHITE) nextMove = AllianceType.BLACK;
+        else nextMove = AllianceType.WHITE;
+        
         /**
          * Assume move here is legel move
          */
@@ -97,20 +108,53 @@ public class Board {
         }
     }
 
+    public Collection<Move> getMoves() {
+        List<Move> moves = new ArrayList<>();
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                if (board[i][j] != null && board[i][j].getAllianceType() == nextMove) {
+                    Collection<Move> checkValidMove = board[i][j].calculateLegalMoves(this);
+                    
+                    moves = Stream.of(moves, checkValidMove).flatMap(Collection::stream)
+                        .collect(Collectors.toList());
+                }
+            }
+        }
+        return moves;
+    }
+
     /*
-     * TODO
-     * - Return the Tile class at that slot
+     * Return the Tile class at that slot
      */
     public Piece getTile(int row, int col) {
         return board[row][col];
     }
 
     /*
-     * TODO
      * - Check if the tile is occupied by ally
      * - Check if this move cuase checkmate
      */
     public boolean isLegelMove(Piece piece, int[] destination) {
+        int row = destination[0];
+        int col = destination[1];
+
+        /**
+         * - Empty grid
+         * - Enemy Piece, can capture
+         */
+        if (board[row][col] == null || (board[row][col].getAllianceType() != piece.getAllianceType())) {
+            if (causeCheckMate(piece, destination)) return false;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /*
+     * TODO:
+     *  - Check if this move cause piece being checkmated
+     */
+    private boolean causeCheckMate(Piece piece, int[] destination) {
         return false;
     }
 }

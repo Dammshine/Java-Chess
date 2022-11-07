@@ -13,15 +13,46 @@ public class Rock extends Piece {
         super(PieceType.ROCK, pieceRow, pieceCol, true, allianceType);
     }
 
-    static final int[][] CANDIDATE_MOVE_COORDINATES = {
-        { 0, 1}, { 0, 2}, { 0, 3}, { 0, 4}, { 0, 5}, { 0, 6}, { 0, 7},
-        { 0,-1}, { 0,-2}, { 0,-3}, { 0,-4}, { 0,-5}, { 0,-6}, { 0,-7},
-        { 1, 0}, { 2, 0}, { 3, 0}, { 4, 0}, { 5, 0}, { 6, 0}, { 7, 0},
-        {-1, 0}, {-2, 0}, {-3, 0}, {-4, 0}, {-5, 0}, {-6, 0}, {-7, 0}
-    };
-
     @Override
     public Collection<Move> calculateLegalMoves(Board board) {
-        return Piece.calcualteMovesHelper(this, board, CANDIDATE_MOVE_COORDINATES);
+        final List<Move> legelMoves = new ArrayList<>();
+        int row = super.getPiecePosition()[0];
+        int col = super.getPiecePosition()[1];
+        
+        // Four possible direction, 
+        // - can be by friendly piece, 
+        // - or by capture one eneny piece
+        for (int i = 0; i < BoardUltis.NUM_TILE; i++) {
+            int[] checkPos = new int[]{row + i, col};
+            if (!BoardUltis.isValidCoor(new int[]{row, col}) || !board.isLegelMove(this, new int[]{row, col})) break;
+            else legelMoves.add(new Move(this, checkPos));
+
+            if (board.getTile(checkPos[0], checkPos[1]) != null) break;
+        }
+
+        for (int i = 0; i < BoardUltis.NUM_TILE; i++) {
+            int[] checkPos = new int[]{row - i, col};
+            if (!BoardUltis.isValidCoor(new int[]{row, col}) || !board.isLegelMove(this, new int[]{row, col})) break;
+            else legelMoves.add(new Move(this, checkPos));
+
+            if (board.getTile(checkPos[0], checkPos[1]) != null) break;
+        }
+
+        for (int i = 0; i < BoardUltis.NUM_TILE; i++) {
+            int[] checkPos = new int[]{row, col + i};
+            if (!BoardUltis.isValidCoor(new int[]{row, col}) || !board.isLegelMove(this, new int[]{row, col})) break;
+            else legelMoves.add(new Move(this, checkPos));
+
+            if (board.getTile(checkPos[0], checkPos[1]) != null) break;
+        }
+
+        for (int i = 0; i < BoardUltis.NUM_TILE; i++) {
+            int[] checkPos = new int[]{row, col - i};
+            if (!BoardUltis.isValidCoor(new int[]{row, col}) || !board.isLegelMove(this, new int[]{row, col})) break;
+            else legelMoves.add(new Move(this, checkPos));
+
+            if (board.getTile(checkPos[0], checkPos[1]) != null) break;
+        }
+        return legelMoves;
     }
 }

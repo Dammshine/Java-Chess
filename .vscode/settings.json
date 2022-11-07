@@ -3,6 +3,7 @@
     "java.project.outputPath": "bin",
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
-        "guava-18.0.jar"
+        "guava-18.0.jar",
+        "bin/guava-31.1-jre.jar"
     ]
 }

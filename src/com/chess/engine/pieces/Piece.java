@@ -73,6 +73,10 @@ public abstract class Piece {
     public static Piece getPiece() {
         return null;
     }
+
+    public AllianceType getAllianceType() {
+        return allianceType;
+    }
     
     @Override
     public String toString() {
