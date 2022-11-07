@@ -1,9 +1,11 @@
 package com.chess.engine.board;
 
+import java.text.CollationElementIterator;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -100,11 +102,16 @@ public class Board {
         if (board[row][col] == null) {
             board[row][col] = board[currRow][currCol];
             board[currRow][currCol] = null;
+            board[row][col].setPiecePosition(new int[]{row, col});
+            
         } else {
             // Capture that pieces
+            /* System.out.println(board[row][col]);
+            System.exit(0); */
             board[row][col] = null;
-            board[row][col] = board[currRow][currCol];
+            board[row][col] = board[currRow][currCol]; 
             board[currRow][currCol] = null;
+            board[row][col].setPiecePosition(new int[]{row, col});
         }
     }
 
@@ -121,6 +128,10 @@ public class Board {
             }
         }
         return moves;
+    }
+
+    public Collection<Move> getMoves(int row, int col) {
+        return board[row][col].calculateLegalMoves(this);
     }
 
     /*
@@ -151,10 +162,47 @@ public class Board {
     }
 
     /*
+     * - Check if the tile is occupied by an enermy
+     */
+    public boolean isLegelAttack(Piece piece, int[] destination) {
+        int row = destination[0];
+        int col = destination[1];
+
+        /**
+         * - Empty grid
+         * - Enemy Piece, can capture
+         */
+        if (board[row][col] == null || (board[row][col].getAllianceType() == piece.getAllianceType())) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /*
      * TODO:
      *  - Check if this move cause piece being checkmated
      */
     private boolean causeCheckMate(Piece piece, int[] destination) {
         return false;
+    }
+
+    /**
+     * TODO:
+     *  - Self simulate a move, use a random move basically
+     */
+    public void selfSimulate(boolean printAction) {
+        List<Move> moves = (List<Move>) this.getMoves();
+        if (moves.size() == 0) {
+            System.out.println("Game ended");
+            System.exit(0);
+        }
+        // G2G code
+        Move randomMove = moves.get(
+            ThreadLocalRandom.current().nextInt(moves.size())
+            % moves.size());
+        
+        if (printAction) System.out.println(randomMove);
+        this.simulate(randomMove);
     }
 }

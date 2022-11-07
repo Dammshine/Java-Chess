@@ -1,10 +1,17 @@
 package com.chess.terminalGUI;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Scanner;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import javax.print.event.PrintEvent;
+import javax.swing.Timer;
+import javax.swing.event.AncestorListener;
+
 
 import com.chess.engine.board.Board;
 import com.chess.engine.board.Move;
@@ -40,16 +47,21 @@ public class terminal {
         }
     }
 
-    public static void checkOutExistMOves(Board board) {
+    public static void checkOutExistMoves(Board board) {
         graphOutput(board);
         Collection<Move> moves = board.getMoves();
         System.out.println(moves.size());
         for (Move move : moves) {
-            System.out.println(move.getMovePiece() + 
-            " [" + (char) (move.getMovePiece().getPiecePosition()[1] + 'A') + "," 
-            + (8 - move.getMovePiece().getPiecePosition()[0]) + "]" + "=>" +
-            " [" + (char) (move.getMoveCol() + 'A') + "," 
-            + (8 - move.getMoveRow()) + "]");
+            System.out.println(move);
+        }
+    }
+
+    public static void checkOutExistMoves(Board board, int grid, int tile) {
+        graphOutput(board);
+        Collection<Move> moves = board.getMoves(grid, tile);
+        System.out.println(moves.size());
+        for (Move move : moves) {
+            System.out.println(move);
         }
     }
 
@@ -57,12 +69,36 @@ public class terminal {
         Scanner myObj = new Scanner(System.in);
         
         while (true) {
-            System.out.println("\nEnter the your operation:\n\t 1. move\n\t 2. hint");
+            System.out.println("\nEnter the your operation:\n\t 1. move\n\t 2. hint\n\t 3. simulate\n\t 4. simulate game");
             String command = myObj.nextLine();
             if (command.equals("hint")) {
-                checkOutExistMOves(board);
+                System.out.println("Enter the options:\n\t 1. checkAll\n\t 2. checkCoordinate");
+                String option = myObj.nextLine();
+                if (option == "checkAll") checkOutExistMoves(board);
+                else {
+                    System.out.println("Enter the coordinate:");
+                    option = myObj.nextLine();
+                    int tile = option.charAt(0) - 'A';
+                    int grid = 7 - (option.charAt(1) - '1');
+                    checkOutExistMoves(board, grid, tile);
+                }
+                
             } else if (command.equals("move")) {
                 break;
+            } else if (command.equals("simulate")) {
+                board.selfSimulate(false);
+                graphOutput(board);
+            } else if (command.equals("simulate game")) {
+                Timer timer = new Timer(100, new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent evt) {
+                        graphOutput(board);
+                        board.selfSimulate(true);
+                    }
+                });
+
+                timer.setRepeats(true); // Only execute once
+                timer.start(); // Go go go!
             }
         }
         
@@ -82,6 +118,7 @@ public class terminal {
         Move moveObj = new Move(pieceMove, new int[]{grid, tile});
         return moveObj;
     }
+
 
     public static void main(String[] args) {
         

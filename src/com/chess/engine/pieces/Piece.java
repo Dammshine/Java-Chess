@@ -44,8 +44,8 @@ public abstract class Piece {
 
     final PieceType pieceType;
     final AllianceType allianceType;
-    final int pieceRow;
-    final int pieceCol;
+    int pieceRow;
+    int pieceCol;
     private final boolean isFirstMove;
     Piece(final PieceType type,
           final int pieceRow,
@@ -65,13 +65,13 @@ public abstract class Piece {
     public int[] getPiecePosition() {
         return new int[]{pieceRow, pieceCol};
     }
+    public void setPiecePosition(int[] newPos) {
+        this.pieceRow = newPos[0];
+        this.pieceCol = newPos[1];
+    }
     
     public boolean isFirstMove() {
         return isFirstMove;
-    }
-
-    public static Piece getPiece() {
-        return null;
     }
 
     public AllianceType getAllianceType() {

@@ -21,4 +21,13 @@ public class Move {
     public Piece getMovePiece() {
         return movePiece;
     }
+
+    @Override
+    public String toString() {
+        return this.getMovePiece() + 
+            " [" + (char) (this.getMovePiece().getPiecePosition()[1] + 'A') + "," 
+            + (8 - this.getMovePiece().getPiecePosition()[0]) + "]" + "=>" +
+            " [" + (char) (this.getMoveCol() + 'A') + "," 
+            + (8 - this.getMoveRow()) + "]";
+    }
 }
