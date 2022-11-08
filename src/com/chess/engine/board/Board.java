@@ -9,7 +9,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.chess.deprecate.Tile;
 import com.chess.engine.pieces.Bishop;
 import com.chess.engine.pieces.King;
 import com.chess.engine.pieces.Knight;
@@ -19,19 +18,27 @@ import com.chess.engine.pieces.Queen;
 import com.chess.engine.pieces.Rock;
 import com.chess.engine.pieces.Piece.AllianceType;
 import com.chess.engine.pieces.Piece.PieceType;
+import com.chess.engine.player.BlackPlayer;
+import com.chess.engine.player.WhitePlayer;
 
 public class Board {
-    private Collection<Piece> whitePieces;
-    private Collection<Piece> blackPieces;
     private Piece[][] board;
     private AllianceType nextMove;
+
+    /**
+     * Player Class
+     * @return
+     */
+    private WhitePlayer whitePlayer;
+    private BlackPlayer blackPlayer;
+
     
     public static Board initializeBoard() {
         return new Board();
     }
     
     /**
-     * 
+     * Private constructor for the board
      */
     private Board() {
         // Piece that is null indicate it's an empty tile
@@ -77,6 +84,10 @@ public class Board {
 
         // Initialize first move
         nextMove = AllianceType.WHITE;
+
+        // Initialize Player
+        this.whitePlayer = new WhitePlayer(this, getMoves(AllianceType.WHITE), getMoves(AllianceType.BLACK));
+        this.blackPlayer = new BlackPlayer(this, getMoves(AllianceType.BLACK), getMoves(AllianceType.WHITE));
     }
 
     /**
@@ -102,8 +113,6 @@ public class Board {
         if (board[row][col] == null) {
             board[row][col] = board[currRow][currCol];
             board[currRow][currCol] = null;
-            board[row][col].setPiecePosition(new int[]{row, col});
-            
         } else {
             // Capture that pieces
             /* System.out.println(board[row][col]);
@@ -111,15 +120,30 @@ public class Board {
             board[row][col] = null;
             board[row][col] = board[currRow][currCol]; 
             board[currRow][currCol] = null;
-            board[row][col].setPiecePosition(new int[]{row, col});
         }
+        
+        board[row][col].setPiecePosition(new int[]{row, col});
+        board[row][col].setFirstMove();
     }
 
+    /**
+     * Get Moves
+     * @return
+     */
     public Collection<Move> getMoves() {
+        return getMoves(nextMove);
+    }
+
+    /**
+     * Get moves from one alliance side
+     * @param side
+     * @return
+     */
+    public Collection<Move> getMoves(AllianceType side) {
         List<Move> moves = new ArrayList<>();
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
-                if (board[i][j] != null && board[i][j].getAllianceType() == nextMove) {
+                if (board[i][j] != null && board[i][j].getAllianceType() == side) {
                     Collection<Move> checkValidMove = board[i][j].calculateLegalMoves(this);
                     
                     moves = Stream.of(moves, checkValidMove).flatMap(Collection::stream)
@@ -139,6 +163,36 @@ public class Board {
      */
     public Piece getTile(int row, int col) {
         return board[row][col];
+    }
+
+    /**
+     * Return pieces for white side
+     * @param piece
+     * @param destination
+     * @return
+     */
+    public Collection<Piece> getWhitePieces() {
+        return getPieces(AllianceType.WHITE);
+    }
+    /**
+     * Return pieces for black side
+     * @param piece
+     * @return
+     */
+    public Collection<Piece> getBlackPieces() {
+        return getPieces(AllianceType.BLACK);
+    }
+
+    private Collection<Piece> getPieces(AllianceType side) {
+        List<Piece> pieces = new ArrayList<>();
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                if (board[i][j] != null && board[i][j].getAllianceType() == side) {
+                    pieces.add(board[i][j]);
+                }
+            }
+        }
+        return pieces;
     }
 
     /*
@@ -197,7 +251,8 @@ public class Board {
             System.out.println("Game ended");
             System.exit(0);
         }
-        // G2G code
+
+        // G2G code, get a random move
         Move randomMove = moves.get(
             ThreadLocalRandom.current().nextInt(moves.size())
             % moves.size());

@@ -28,7 +28,7 @@ This project is my first project plan, intension is to get a job. The aim can be
 
 Pharase 1 completed.
 
-### 2. Pharase 1.1
+### 2. Pharase 2
 - Add several chess feature
     - Castle on king side, queen side
     - En passant
@@ -38,3 +38,5 @@ Pharase 1 completed.
     - Wining condition
 - Add testing for the chess board
 - Add an output format, for moves and board
+- Move general ultility into boardUlty class.
+- Add Player and Move class, to implenmt all above, 

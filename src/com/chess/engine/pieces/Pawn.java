@@ -12,8 +12,7 @@ public class Pawn extends Piece {
     final int allianceFactor;
     public Pawn(int pieceRow, int pieceCol, AllianceType allianceType) {
         super(PieceType.PAWN, pieceRow, pieceCol, true, allianceType);
-        if (allianceType == AllianceType.WHITE) allianceFactor = -1;
-        else allianceFactor = 1;
+        allianceFactor = BoardUltis.getAllianceFactor(this);
     }
 
     static final int[][] CANDIDATE_MOVE_COORDINATES = {
@@ -22,15 +21,20 @@ public class Pawn extends Piece {
     
     @Override
     public Collection<Move> calculateLegalMoves(Board board) {
-        // TODO
-        // - First move can be a jump or a move, can only move forward in one direction
-        // - Attack and move are different, 
-        // - Can promote [Ignore in this iteration!!!]
-        // - en passant  [Ignore in this iteration!!!]
-
         final List<Move> legelMoves = new ArrayList<>();
-        if (super.isFirstMove()) {
-            int[] pos = this.getPiecePosition();
+        
+        // Use flag to determine if pawn can jump
+        boolean flag = true;
+        int[] pos = this.getPiecePosition();
+        pos[0] += allianceFactor;
+        if (!BoardUltis.isValidCoor(pos)) flag = false;
+        // Board will determine if it's a valid move
+        else if (!board.isLegelMove(this, pos)) flag = false;
+        else legelMoves.add(new Move(this, pos));
+        
+        // Get jump
+        if (super.isFirstMove() && flag) {
+            pos = this.getPiecePosition();
             pos[0] += 2 * allianceFactor;
 
             if (!BoardUltis.isValidCoor(pos)) ;
@@ -39,13 +43,6 @@ public class Pawn extends Piece {
             else legelMoves.add(new Move(this, pos));
         }
 
-        int[] pos = this.getPiecePosition();
-        pos[0] += allianceFactor;
-        if (!BoardUltis.isValidCoor(pos)) ;
-        // Board will determine if it's a valid move
-        else if (!board.isLegelMove(this, pos)) ;
-        else legelMoves.add(new Move(this, pos));
-        
         for (final int[] move : CANDIDATE_MOVE_COORDINATES) {
             pos = this.getPiecePosition();
             pos[0] += (move[0] * allianceFactor);
