@@ -91,6 +91,28 @@ public class Board {
     }
 
     /**
+     * Private constructor for the board
+     */
+    private Board(Piece[][] board, AllianceType nextMove) {
+        // Piece that is null indicate it's an empty tile
+        this.board = new Piece[8][8];
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                if (board[i][j] == null) this.board[i][j] = null;
+                else this.board[i][j] = this.board[i][j].duplicate();
+                
+            }
+        }
+
+        // Initialize first move
+        this.nextMove = nextMove;
+
+        // Initialize Player
+        this.whitePlayer = new WhitePlayer(this, getMoves(AllianceType.WHITE), getMoves(AllianceType.BLACK));
+        this.blackPlayer = new BlackPlayer(this, getMoves(AllianceType.BLACK), getMoves(AllianceType.WHITE));
+    }
+
+    /**
      * 
      * @param canidateCoordinate
      * @return
@@ -246,6 +268,14 @@ public class Board {
      *  - Self simulate a move, use a random move basically
      */
     public void selfSimulate(boolean printAction) {
+        // G2G code, get a random move
+        Move randomMove = getRandomMove();
+        
+        if (printAction) System.out.println(randomMove);
+        this.simulate(randomMove);
+    }
+
+    public Move getRandomMove() {
         List<Move> moves = (List<Move>) this.getMoves();
         if (moves.size() == 0) {
             System.out.println("Game ended");
@@ -256,8 +286,14 @@ public class Board {
         Move randomMove = moves.get(
             ThreadLocalRandom.current().nextInt(moves.size())
             % moves.size());
-        
-        if (printAction) System.out.println(randomMove);
-        this.simulate(randomMove);
+    }
+
+
+    public Board duplicate() {
+        return new Board(this.board, this.nextMove);
+    }
+
+    public AllianceType getNextMove() {
+        return nextMove;
     }
 }

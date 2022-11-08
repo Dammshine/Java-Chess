@@ -1,6 +1,7 @@
 package com.chess.engine.board;
 
 import com.chess.engine.pieces.Piece;
+import com.chess.engine.pieces.Piece.AllianceType;
 
 public class Move {
     final Piece movePiece;
@@ -20,6 +21,9 @@ public class Move {
     }
     public Piece getMovePiece() {
         return movePiece;
+    }
+    public AllianceType getMoveMaker() {
+        return movePiece.getAllianceType();
     }
 
     @Override

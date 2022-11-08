@@ -1,6 +1,8 @@
 package com.chess.engine.player;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import com.chess.engine.board.Board;
 import com.chess.engine.board.Move;
@@ -14,6 +16,10 @@ abstract public class Player {
     protected final King playerKing;
     protected final Collection<Move> legalMove;
     protected final Collection<Move> opponentMove;
+    private final boolean isInCheck;
+
+    // A strategy pattern here
+    protected PlayerBody body;
 
     Player(final Board board,
         final Collection<Move> legalMove,
@@ -22,6 +28,21 @@ abstract public class Player {
         this.playerKing = establishKing();
         this.legalMove = legalMove;
         this.opponentMove = opponentMove;
+        isInCheck = MoveAnalyzer.calculateAttackOnTile(board, playerKing.getPiecePosition(), opponentMove).size() != 0;
+    }
+
+    /**
+     * Return moves that attak piece position
+     * @param piecePosition
+     * @param opponentMove
+     * @return
+     */
+    protected Collection<Move> calculateEscapeMove() {
+        Collection<Move> escapeMoves = new ArrayList<Move>();
+        for (Move move : legalMove) {
+            if (MoveAnalyzer.analysisMove(board, move) == MoveStatus.DONE) escapeMoves.add(move);
+        }
+        return escapeMoves;
     }
 
     /**
@@ -56,30 +77,27 @@ abstract public class Player {
     }
 
     /**
-     * TODO:
      * Return if player in check
      * @return
      */
     public boolean isInCheck() {
-        return false;
+        return isInCheck;
     }
 
     /**
-     * TODO:
      * Return if player in checkmate
      * @return
      */
     public boolean isInCheckMate() {
-        return false;
+        return isInCheck() && calculateEscapeMove().size() == 0;
     }
 
     /**
-     * TODO:
      * Return if player in stalemate
      * @return
      */
     public boolean isStaleMate() {
-        return false;
+        return !isInCheck() && calculateEscapeMove().size() == 0;
     }
 
     /**
@@ -89,5 +107,9 @@ abstract public class Player {
      */
     public boolean isCastled() {
         return false;
+    }
+
+    public Board getBoard() {
+        return board;
     }
 }

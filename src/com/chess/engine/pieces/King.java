@@ -21,4 +21,9 @@ public class King extends Piece {
     public Collection<Move> calculateLegalMoves(Board board) {
         return Piece.calcualteMovesHelper(this, board, CANDIDATE_MOVE_COORDINATES);
     }
+
+    @Override
+    public King duplicate() {
+        return new King(pieceRow, pieceCol, allianceType);
+    }
 }

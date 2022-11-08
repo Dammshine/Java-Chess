@@ -57,4 +57,9 @@ public class Pawn extends Piece {
         
         return legelMoves;
     }
+
+    @Override
+    public Pawn duplicate() {
+        return new Pawn(pieceRow, pieceCol, allianceType);
+    }
 }

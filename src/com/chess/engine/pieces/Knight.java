@@ -21,4 +21,9 @@ public class Knight extends Piece{
     public Collection<Move> calculateLegalMoves(final Board board) {
         return Piece.calcualteMovesHelper(this, board, CANDIDATE_MOVE_COORDINATES);
     }
+
+    @Override
+    public Knight duplicate() {
+        return new Knight(pieceRow, pieceCol, allianceType);
+    }
 }

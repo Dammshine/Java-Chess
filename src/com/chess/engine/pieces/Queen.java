@@ -87,4 +87,9 @@ public class Queen extends Piece {
         }
         return legelMoves;
     }
+
+    @Override
+    public Queen duplicate() {
+        return new Queen(pieceRow, pieceCol, allianceType);
+    }
 }

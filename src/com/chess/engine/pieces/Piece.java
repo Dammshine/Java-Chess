@@ -96,6 +96,12 @@ public abstract class Piece {
     }
 
     /**
+     * A function that returns object's duplicate
+     * @return
+     */
+    abstract public Piece duplicate();
+
+    /**
      * A common interface for all pieces, passes own possible moves according to type,
      * Exclude pawn since it got some unique mechanism (attack and move differs, also can promote, etc)
      * return a list that filters is those possible move are possible 

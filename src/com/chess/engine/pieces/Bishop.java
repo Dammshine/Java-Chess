@@ -55,4 +55,9 @@ public class Bishop extends Piece {
         }
         return legelMoves;
     }
+
+    @Override
+    public Bishop duplicate() {
+        return new Bishop(pieceRow, pieceCol, allianceType);
+    }
 }

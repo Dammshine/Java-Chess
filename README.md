@@ -40,3 +40,4 @@ Pharase 1 completed.
 - Add an output format, for moves and board
 - Move general ultility into boardUlty class.
 - Add Player and Move class, to implenmt all above, 
+- Transit the single board, to board only represent a state. 

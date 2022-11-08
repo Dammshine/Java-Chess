@@ -55,4 +55,9 @@ public class Rock extends Piece {
         }
         return legelMoves;
     }
+
+    @Override
+    public Rock duplicate() {
+        return new Rock(pieceRow, pieceCol, allianceType);
+    }
 }
